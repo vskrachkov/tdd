@@ -3,7 +3,7 @@ Attempt of test driven development.
 All code was written in comply with book of Harry Percival about TDD, 
 thanks him for this book.
 ### Workflow
-1. Start by running functional tests. Describes new 
+1. Start by writing functional tests. Describes new 
 functionality from user`s point.
 1. Once functional tests fail, we starts thinking about how
 to write a code. We use unit tests to define how we want our 
