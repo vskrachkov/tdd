@@ -3,16 +3,21 @@
     ===================
 """
 import os
-
 import time
+
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
 from django import setup
 from django.test import LiveServerTestCase
+
+from faker import Faker
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "superlists.settings")
 setup()
 
 TEST_PORT = 8081
+fake = Faker()
 
 
 class NewVisitorTest(LiveServerTestCase):
@@ -29,27 +34,26 @@ class NewVisitorTest(LiveServerTestCase):
         time.sleep(2)
         self.browser.quit()
 
-    def test_can_start_a_list_and_retrieve_it_later(self):
-        # Checks a home_page
-        self.browser.get(f'http://localhost:{TEST_PORT}')
-        # The page title and its header contains 'To-Do' string.
-        self.assertIn('To-Do', self.browser.title)
-        header = self.browser.find_element_by_class_name('h1').text
-        self.assertIn('To-Do', header)
-        # Input box contains placeholder with invitation to create a new to-do
-        # item straight away.
-        input_box = self.browser.find_element_by_id('id_new_item')
-        self.assertEqual('Enter a to-do item',
-                         input_box.get_attribute('placeholder'))
-        # User types text of to-do in input_box
-        input_box.send_keys('It is a text of new to-do item.')
-        # When he hits enter, a page updates and contains the text that he
-        # write before.
+    def check_row_in_table(self, row_text):
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
-            any(rows.text == 'It is a text of new to-do item.' for row in rows)
-        )
+            any(row.text == row_text for row in rows))
+
+    def test_can_start_a_list_and_retrieve_it_later(self):
+        self.browser.get(f'http://localhost:{TEST_PORT}')
+        self.assertIn('To-Do', self.browser.title)
+        header = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('To-Do', header)
+        input_box = self.browser.find_element_by_id('id_new_item')
+        self.assertEqual('Enter a to-do item',
+                         input_box.get_attribute('placeholder'))
+        item_text = fake.sentence(nb_words=5)
+        input_box.send_keys(item_text)
+        # When he hits enter, a page updates and contains the text that he
+        # write before.
+        input_box.send_keys(Keys.ENTER)
+
         # There is still a textbox here. He types a text of a new item
         # and hit enter. The page updates again and there two items of list
         # displayed now.
