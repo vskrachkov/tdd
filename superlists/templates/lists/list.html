@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <table id="id_list_table">
+    {% if items %}
+        {% for item in items %}
+        <tr>
+            <td>{{ forloop.counter }}. {{ item.text }}</td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td>No items.</td>
+        </tr>
+    {% endif %}
+    </table>
+{% endblock %}
