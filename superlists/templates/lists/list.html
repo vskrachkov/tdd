@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <form method="post" action="{% url 'add_new_item' list_id %}">
+        {% csrf_token %}
+        {% include 'lists/_input_box.html' %}
+    </form>
     <table id="id_list_table">
     {% if items %}
         {% for item in items %}

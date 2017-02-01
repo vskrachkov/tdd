@@ -3,14 +3,21 @@
     ============================
 """
 from django.conf.urls import url, include
-# from django.contrib import admin
 
 import lists.views
 
 urlpatterns = [
+    # Home page
     url(r'^$', lists.views.home_page, name='home_page'),
-    url(r'^lists/only-one', lists.views.lists_view, name='lists_view'),
-    url(r'^/lists/new', lists.views.new_item, name='new_list'),
 
-    # url(r'^admin/', include(admin.site.urls))
+    # Display To-Do list
+    url(r'^lists/(?P<list_id>\d+)/$', lists.views.lists_view,
+        name='lists_view'),
+
+    # Adds new item to existing to-do list
+    url(r'^lists/(?P<list_id>\d+)/add$', lists.views.add_item,
+        name='add_new_item'),
+
+    # Creates item in new to-do list
+    url(r'^lists/new$', lists.views.new_item, name='new_item'),
 ]

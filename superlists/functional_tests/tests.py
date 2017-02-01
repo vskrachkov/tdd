@@ -36,7 +36,7 @@ class NewVisitorTest(LiveServerTestCase):
             any(row.text == row_text for row in rows))
 
     @staticmethod
-    def types_item_text_and_press_enter(self, input_box):
+    def types_item_text_and_press_enter(input_box):
         sentence = fake.sentence(nb_words=5)
         input_box.send_keys(sentence)
         input_box.send_keys(Keys.ENTER)
@@ -72,14 +72,16 @@ class NewVisitorTest(LiveServerTestCase):
 
         # (6) The first user leaves the site and another comes.
         self.browser.quit()
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Chrome(
+            executable_path='/usr/local/bin/chromedriver')
         self.browser.get(self.live_server_url)
 
         # (7) Checks that another user cannot see the text of first one.
         page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertIn(first_user_item_text, page_text)
+        self.assertNotIn(first_user_item_text, page_text)
 
         # {same as 4} Another user types a text of new item and press Enter.
+        input_box = self.browser.find_element_by_id('id_new_item')
         another_user_text = self.types_item_text_and_press_enter(input_box)
         # {same as 5} Checks that redirect url corresponding to right
         self.assert_current_url_regex('/lists/.+')
