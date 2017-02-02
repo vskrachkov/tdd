@@ -22,8 +22,7 @@ def new_item(request):
     a_list = List.objects.create()
     Item.objects.create(
         text=request.POST.get('item_text'),
-        todo_list=a_list
-    )
+        todo_list=a_list)
     return redirect(
         reverse(lists_view, kwargs={'list_id': a_list.id})
     )

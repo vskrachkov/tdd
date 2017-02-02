@@ -72,6 +72,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'superlists.wsgi.application'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases

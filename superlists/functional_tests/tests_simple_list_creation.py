@@ -1,53 +1,23 @@
 """
-    functional_tests.py
-    ===================
+    Tests creation of simple todo lists.
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
-import os
-
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
-from django import setup
-from django.test import LiveServerTestCase
-
 from faker import Faker
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "superlists.settings")
-setup()
+from .base import FunctionalTest
 
 fake = Faker()
 
 
-class NewVisitorTest(LiveServerTestCase):
-    def setUp(self):
-        """Starts Chrome web browser."""
-        self.browser = webdriver.Chrome(
-            executable_path='/usr/local/bin/chromedriver')
-        self.browser.implicitly_wait(3)
-
-    def tearDown(self):
-        """Close Chrome web browser."""
-        self.browser.quit()
-
-    def check_row_in_table(self, row_text):
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == row_text for row in rows))
-
+class NewVisitorTest(FunctionalTest):
     @staticmethod
     def types_item_text_and_press_enter(input_box):
         sentence = fake.sentence(nb_words=5)
         input_box.send_keys(sentence)
         input_box.send_keys(Keys.ENTER)
         return sentence
-
-    def assert_current_url_regex(self, expression):
-        """Fails if current url is not match :expression:
-        Args:
-            :expression: regular expression for matching current url.
-        """
-        self.assertRegex(self.browser.current_url, expression)
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # (1) Go to the home page.
