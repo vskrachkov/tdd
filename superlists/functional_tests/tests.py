@@ -86,5 +86,3 @@ class NewVisitorTest(LiveServerTestCase):
         # {same as 5} Checks that redirect url corresponding to right
         self.assert_current_url_regex('/lists/.+')
         # expression and not equal to firs user url.
-
-        self.fail('The test is not finished !')
